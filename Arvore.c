@@ -25,13 +25,12 @@ void inserir_livro(No** raiz, Livro livro) {
         (*raiz)->livro = livro;
         (*raiz)->esquerda = NULL;
         (*raiz)->direita = NULL;
-    } else if (strcmp(livro.Genero, (*raiz)->livro.Genero) <= 0) {
+    } else if (livro.Codigo < (*raiz)->livro.Codigo) {
         inserir_livro(&((*raiz)->esquerda), livro);
     } else {
         inserir_livro(&((*raiz)->direita), livro);
     }
 }
-
 
 // Função para criar um novo livro
 Livro criar_livro(int codigo, const char* titulo, const char* autor, const char* genero, int ano, const char* editora, int numero_pagina) {
@@ -91,12 +90,8 @@ void buscar_por_genero(No* raiz, char genero[]) {
     if (strcmp(raiz->livro.Genero, genero) == 0) {
         getLivro(raiz->livro);
     }
-    if(raiz->livro.Genero <= genero){
     buscar_por_genero(raiz->esquerda, genero);
-    }
-    if(raiz->livro.Genero > genero){
     buscar_por_genero(raiz->direita, genero);
-    }
 }
 
 // Libera a memória de um nó e suas strings

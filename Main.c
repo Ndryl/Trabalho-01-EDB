@@ -85,7 +85,7 @@ int main(void) {
 
 
             case 5:
-                printf("Exibindo todos os livros da árvore em ordem alfabética:\n");
+                printf("Exibindo todos os livros da árvore em ordem:\n");
                 exibir_arvore(raiz);
                 break;
 
