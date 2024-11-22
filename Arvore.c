@@ -88,11 +88,12 @@ void getLivro(Livro livro) {
 void buscar_por_genero(No* raiz, char genero[]) {
     if (raiz == NULL) return;
 
-    if (strcmp(raiz->livro.Genero, genero) == 0) {
-        getLivro(raiz->livro);
-    }
+    
     if(raiz->livro.Genero <= genero){
     buscar_por_genero(raiz->esquerda, genero);
+    }
+    if (strcmp(raiz->livro.Genero, genero) == 0) {
+        getLivro(raiz->livro);
     }
     if(raiz->livro.Genero > genero){
     buscar_por_genero(raiz->direita, genero);
@@ -164,6 +165,7 @@ No* carregar_livros(No* raiz, char* filename) {
     fclose(file);
     return raiz;
 }
+
 
 // Exibe todos os livros da árvore em ordem
 void exibir_arvore(No* raiz) {
