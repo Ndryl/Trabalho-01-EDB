@@ -11,7 +11,10 @@ void remover_quebra_linha(char* str) {
 
 // Inicializa a árvore retornando NULL (árvore vazia)
 No* inicializar_arvore() {
-    return NULL;
+    No* raiz;
+    raiz->direita = NULL;
+    raiz->esquerda = NULL;
+
 }
 
 // Insere um livro na árvore binária
@@ -85,19 +88,25 @@ void getLivro(Livro livro) {
 }
 
 // Busca livros por gênero na árvore
-void buscar_por_genero(No* raiz, char genero[]) {
+void buscar_por_genero(No* raiz, char genero[100], int* cont) {
     if (raiz == NULL) return;
 
-    if (strcmp(raiz->livro.Genero, genero) == 0) {
+    // Compara o gênero do nó atual com o gênero buscado
+    int comparacao = strcmp(raiz->livro.Genero, genero);
+
+    if (comparacao == 0) {
         getLivro(raiz->livro);
-    }
-    if(raiz->livro.Genero <= genero){
-    buscar_por_genero(raiz->esquerda, genero);
-    }
-    if(raiz->livro.Genero > genero){
-    buscar_por_genero(raiz->direita, genero);
+        (*cont)++;
+
+    } 
+    else if (comparacao > 0) {
+        buscar_por_genero(raiz->esquerda, genero, cont);
+    } 
+    else {
+        buscar_por_genero(raiz->direita, genero, cont);
     }
 }
+
 
 // Libera a memória de um nó e suas strings
 void libera_arvore(No* raiz) {

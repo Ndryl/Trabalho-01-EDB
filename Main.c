@@ -8,6 +8,7 @@ int main(void) {
     int opcao;
     char genero[100];
     char nomeArquivo[100];
+    int cont = 0;
 
     do {
         printf("\n#### MENU ####\n");
@@ -16,7 +17,6 @@ int main(void) {
         printf("3 - Buscar por gênero literário\n");
         printf("4 - Carregar Arquivo CSV\n");
         printf("5 - Exibir árvore\n");
-        printf("6 - Liberar árvore\n");
         printf("0 - Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -69,7 +69,11 @@ int main(void) {
             case 3:
                 printf("Digite o gênero para buscar: ");
                 scanf(" %[^\n]", genero);
-                buscar_por_genero(raiz, genero);
+                buscar_por_genero(raiz, genero, &cont);
+                if(cont == 0){
+                    printf("Este gênero não está registrado\n");
+                }
+        
                 break;
 
                 case 4:
@@ -89,17 +93,14 @@ int main(void) {
                 exibir_arvore(raiz);
                 break;
 
-            case 6:
-                if (raiz != NULL) {
+            case 0:
+            if (raiz != NULL) {
                     libera_arvore(raiz);
                     raiz = NULL;  // Evitar uso de memória liberada
                     printf("Árvore liberada com sucesso!\n");
                 } else {
                     printf("A árvore já está vazia.\n");
                 }
-                break;
-
-            case 0:
                 printf("Saindo do programa...\n");
                 break;
 
@@ -109,7 +110,6 @@ int main(void) {
         }
     } while (opcao != 0);
 
-    // Liberação final para evitar vazamento de memória
     if (raiz != NULL) {
         libera_arvore(raiz);
     }

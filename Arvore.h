@@ -29,7 +29,7 @@ Livro criar_livro(int codigo, const char* titulo, const char* autor, const char*
 No* inicializar_arvore();
 void inserir_livro(No** raiz, Livro livro);
 void getLivro(Livro livro);
-void buscar_por_genero(No* raiz, char genero[]);
+void buscar_por_genero(No* raiz, char genero[], int* cont);
 No* carregar_livros(No* raiz, char* nome_arquivo);
 void libera_arvore(No* raiz);
 void exibir_arvore(No* raiz);
