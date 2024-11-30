@@ -11,26 +11,37 @@ void remover_quebra_linha(char* str) {
 
 // Inicializa a árvore retornando NULL (árvore vazia)
 No* inicializar_arvore() {
-    No* raiz;
-    raiz->direita = NULL;
-    raiz->esquerda = NULL;
-
+    return NULL; // Árvore inicialmente vazia
 }
+
 
 // Insere um livro na árvore binária
 void inserir_livro(No** raiz, Livro livro) {
+    if (raiz == NULL) {
+        printf("Erro: ponteiro raiz é NULL\n");
+        return;
+    }
+    if (*raiz != NULL && (*raiz)->livro.Codigo == livro.Codigo) {
+        printf("O código %d do livro já está registrado, o livro %s não pode ser criado.\n", livro.Codigo, livro.Titulo);
+        return;
+    }
+
     if (*raiz == NULL) {
         *raiz = (No*)malloc(sizeof(No));
         if (*raiz == NULL) {
             printf("Erro ao alocar memória para o nó\n");
             return;
         }
+
+        // Inicializa o nó com o livro fornecido
         (*raiz)->livro = livro;
         (*raiz)->esquerda = NULL;
         (*raiz)->direita = NULL;
     } else if (strcmp(livro.Genero, (*raiz)->livro.Genero) <= 0) {
+        // Insere na subárvore esquerda
         inserir_livro(&((*raiz)->esquerda), livro);
     } else {
+        // Insere na subárvore direita
         inserir_livro(&((*raiz)->direita), livro);
     }
 }
@@ -86,23 +97,47 @@ void getLivro(Livro livro) {
     printf("Editora: %s\n", livro.Editora);
     printf("Número de páginas: %d\n", livro.Numero_pagina);
 }
+void normalizar_string(const char* origem, char* destino) {
+    const char* acentuados = "áàâãäéèêëíìîïóòôõöúùûüçÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇ";
+    const char* nao_acentuados = "aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC";
+
+    int i, j;
+    for (i = 0, j = 0; origem[i] != '\0'; i++) {
+        char c = origem[i];
+        const char* p = strchr(acentuados, c);
+        if (p) {
+            // Substitui o caractere acentuado pelo correspondente sem acento
+            destino[j++] = nao_acentuados[p - acentuados];
+        } else {
+            // Converte para minúscula
+            destino[j++] = tolower(c);
+        }
+    }
+    destino[j] = '\0'; // Termina a string
+}
 
 // Busca livros por gênero na árvore
 void buscar_por_genero(No* raiz, char genero[100], int* cont) {
     if (raiz == NULL) return;
 
-    // Compara o gênero do nó atual com o gênero buscado
-    int comparacao = strcmp(raiz->livro.Genero, genero);
+    // Normaliza o gênero buscado e o gênero do nó atual
+    char genero_normalizado[100];
+    char genero_no[100];
+    normalizar_string(genero, genero_normalizado);
+    normalizar_string(raiz->livro.Genero, genero_no);
+
+    // Compara os gêneros normalizados
+    int comparacao = strcmp(genero_no, genero_normalizado);
 
     if (comparacao == 0) {
         getLivro(raiz->livro);
         (*cont)++;
+    } 
 
-    } 
-    else if (comparacao > 0) {
+    // Continua na subárvore esquerda ou direita
+    if (comparacao >= 0) {
         buscar_por_genero(raiz->esquerda, genero, cont);
-    } 
-    else {
+    } else {
         buscar_por_genero(raiz->direita, genero, cont);
     }
 }
@@ -175,11 +210,12 @@ No* carregar_livros(No* raiz, char* filename) {
 }
 
 // Exibe todos os livros da árvore em ordem
-void exibir_arvore(No* raiz) {
+void exibir_arvore(No* raiz, int* cont) {
     if (raiz == NULL) return;
 
-    exibir_arvore(raiz->esquerda);
+    exibir_arvore(raiz->esquerda, cont);
     getLivro(raiz->livro);
-    exibir_arvore(raiz->direita);
+    (*cont)++;
+    exibir_arvore(raiz->direita, cont);
 }
 

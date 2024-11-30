@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 struct Livro{
 
 	int Codigo;
@@ -32,7 +33,7 @@ void getLivro(Livro livro);
 void buscar_por_genero(No* raiz, char genero[], int* cont);
 No* carregar_livros(No* raiz, char* nome_arquivo);
 void libera_arvore(No* raiz);
-void exibir_arvore(No* raiz);
+void exibir_arvore(No* raiz, int* cont);
 void remover_quebra_linha(char* str);
 
 
